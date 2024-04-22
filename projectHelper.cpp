@@ -47,9 +47,16 @@ map<string, string> langCode = {
 int main(int argc, char *argv[])
 {
 
+	string codePath = getenv("CODE_PATH");
+	if (codePath.empty())
+	{
+		cout << "`CODE_PATH` is not set" << endl;
+		return 1;
+	}
+
 	if (argc < 2)
 	{
-		cout << "Usage: p py|cpp|js folder1 folder2 ..." << endl;
+		cout << codePath << endl;
 		return 1;
 	}
 
@@ -59,12 +66,6 @@ int main(int argc, char *argv[])
 		lang = langCode[lang];
 	}
 
-		string codePath = getenv("CODE_PATH");
-	if (codePath.empty())
-	{
-		cout << "`CODE_PATH` is not set" << endl;
-		return 1;
-	}
 	fs::path code_dir(codePath);
 	fs::path closest_match_folder = closest_match(code_dir, lang);
 	for (int i = 2; i < argc; i++)
@@ -76,7 +77,7 @@ int main(int argc, char *argv[])
 		}
 		closest_match_folder = cl;
 	}
-	cout << closest_match_folder << endl;
-
+	string path = closest_match_folder.string();
+	cout << path << endl;
 	return 0;
 }
